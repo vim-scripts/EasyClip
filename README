@@ -1,0 +1,10 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4684
+
+EasyClip is a collection of clipboard related functionality with the goal of making using vim simpler without losing any of its power.  Major changes include: 
+    - Remapping all delete operations to the black hole register and introducing a new operator (cut) to be used instead
+    - Adding a substitute operator
+    - Improvements to paste
+    - Improvements to yank, including support for navigating history
+    - Ability to sync system clipboard with Vim yank history
+
+For more information please visit the github page at: https://github.com/svermeulen/vim-easyclip
