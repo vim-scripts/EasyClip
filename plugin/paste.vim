@@ -6,7 +6,12 @@ let g:EasyClipAutoFormat = get(g:, 'EasyClipAutoFormat', 1)
 " - optionally auto format, preserving the marks `[ and `] in the process
 " - always position the cursor directly after the text for P and p versions
 " - do not move the cursor for gp and gP versions
-function! g:EasyClipPaste(op, format, reg)
+"
+" op = either P or p
+" format = 1 if we should autoformat
+" inline = 1 if we should paste multiline text inline.
+" That is, add the newline wherever the cursor is rather than above/below the current line
+function! g:EasyClipPaste(op, format, reg, inline)
 
     let text = getreg(a:reg)
 
@@ -18,55 +23,56 @@ function! g:EasyClipPaste(op, format, reg)
     let isMultiLine = (text =~# "\n")
     let line = getline(".")
     let isEmptyLine = (line =~# '^\s*$')
+    let oldPos = getpos('.')
 
-    " Save their old position to jumplist
-    " Except for gp since the cursor pos shouldn't change
-    " in that case
-    if isMultiLine && a:op ==# 'P'
-        " just doing m` doesn't work in this case so do it one line above
-        exec "normal! km`j"
+    if a:inline
+        " Do not save to jumplist when pasting inline
+        exec "normal! ". (a:op ==# 'p' ? 'a' : 'i') . "\<c-r>". a:reg . "\<right>"
     else
-        exec "normal! m`"
-    endif
+        " Save their old position to jumplist
+        " Except for gp since the cursor pos shouldn't change
+        " in that case
+        if isMultiLine
+            if a:op ==# 'P'
+                " just doing m` doesn't work in this case so do it one line above
+                exec "normal! km`j"
+            elseif a:op == 'p'
+                exec "normal! m`"
+            endif
+        endif
 
-    exec "normal! \"".a:reg.a:op
+        exec "normal! \"".a:reg.a:op
+    endif
 
     if (isMultiLine || isEmptyLine) && a:format && g:EasyClipAutoFormat
         " Only auto-format if it's multiline or pasting into an empty line
 
         keepjumps normal! `]
         let startPos = getpos('.')
+        normal! ^
+        let numFromStart = startPos[2] - col('.')
+
         " Suppress 'x lines indented' message
         silent exec "keepjumps normal! `[=`]"
         call setpos('.', startPos)
+        normal! ^
 
-        " Update the `] register with the end of the formatted text
-        " I don't know of any way to get this other than searching for it
-        " Go to last line
-        let line = getline(".")
-        let lastWords = matchstr(text, '\v\n=\s*\zs\p*\ze\n=$')
-
-        if line !~# '^\s*$' && lastWords !=# ''
-            let colNo = stridx(line, lastWords)
-
-            if colNo != -1
-                let colNo = colNo + len(lastWords)
-                call cursor(line('.'), colNo)
-            endif
+        if numFromStart > 0
+            " Preserve cursor position so that it is placed at the last pasted character
+            exec "normal! ". numFromStart . "l"
         endif
 
         normal! m]
     endif
 
     if a:op ==# 'gp'
-        exec "normal! ``"
-    endif
+        call setpos('.', oldPos)
 
-    if a:op ==# 'gP'
+    elseif a:op ==# 'gP'
         exec "keepjumps normal! `["
-    endif
 
-    if a:op ==# 'P' || a:op ==# 'p'
+    else
+        " a:op ==# 'P' || a:op ==# 'p'
         exec "keepjumps normal! `]"
     endif
 endfunction
@@ -84,7 +90,7 @@ function! s:PasteText(reg, count, op, format, plugName)
     let cnt = a:count > 0 ? a:count : 1 
 
     while i < cnt
-        call g:EasyClipPaste(a:op, a:format, reg)
+        call g:EasyClipPaste(a:op, a:format, reg, 0)
         let i = i + 1
     endwhile
 
@@ -93,16 +99,22 @@ endfunction
 
 " Change to use the same paste routine above when pasting things in insert mode
 function! g:EasyClipInsertModePaste(reg)
-    let op = (col(".") == (strlen(getline("."))+1)) ? "p" : "P"
 
-    call g:EasyClipPaste(op, 1, a:reg)
-    return "\<right>"
+    let oldVirtualEdit = &virtualedit
+    " We need to set virtual edit otherwise the part in EasyClipPaste where
+    " we do <c-r> ...etc... \<right> will not always work as expected and we'll
+    " be off one character.  This would occur for eg. when pasting a single word into
+    " an empty line
+    set virtualedit=onemore
+    call g:EasyClipPaste('P', 1, a:reg, 1)
+    exec "set virtualedit=". oldVirtualEdit
+    return ""
 endfunction
 
 " Make sure paste works the same in insert mode
 function! s:FixInsertModePaste()
 
-    let registers = '1234567890abcdefghijklmnopqrstuvwxyz*'
+    let registers = '"1234567890abcdefghijklmnopqrstuvwxyz*'
 
     for i in range(strlen(registers))
         let chr = strpart(registers, i, 1)

@@ -24,10 +24,12 @@ function! s:SubstituteMotion(type, ...)
       let excl_right = ""
     endif
 
+    " use keepjumps since we only want to change jumplist
+    " if it's multiline
     if a:type ==# 'line'
-        exe "normal! '[V']".excl_right
+        exe "keepjump normal! '[V']".excl_right
     elseif a:type ==# 'char'
-        exe "normal! `[v`]".excl_right
+        exe "keepjump normal! `[v`]".excl_right
     else
         echom "Unexpected selection type"
         return
@@ -36,12 +38,18 @@ function! s:SubstituteMotion(type, ...)
     let reg = s:activeRegister
 
     if (getreg(reg) =~# "\n")
-        " For some reason using "c" change doesn't work correctly for multiline,
-        " Adds an extra line at the end
+
+        if s:moveCursor
+            " Record the start of the substitution to the jump list
+            exec "normal! m`"
+        endif
+
+        " Using "c" change doesn't work correctly for multiline,
+        " Adds an extra line at the end, so delete instead
         exe "normal! \"_d"
 
-        " Use our own version of paste so it autoformats and positions the cursor correctly
-        call g:EasyClipPaste("P", 1, reg)
+        " Use our own version of paste so it autoformats and positions the cursor correctly, also note: pasting inline
+        call g:EasyClipPaste("P", 1, reg, 1)
     else
         exe "normal! \"_c\<c-r>". reg
     endif
@@ -53,28 +61,26 @@ function! s:SubstituteMotion(type, ...)
     end
 endfunction
 
-function! s:SubstituteLineNoNewLine(reg)
-    exec "normal! 0\"_d$"
-    " Use our own version of paste so it autoformats and positions the cursor correctly
-    call g:EasyClipPaste("P", 1, a:reg)
-endfunction
-
 function! s:SubstituteLine(reg, count)
-    let cnt = a:count > 0 ? a:count : 1 
-    exe "normal! ". cnt . "\"_dd"
+    if getreg(a:reg) !~ '\n'
 
-    let isLastLine = (line(".") == line("$"))
-    if (!isLastLine)
-        normal! k
-    endif
-
-    let i = 0
-    while i < cnt
+        exec "normal! 0\"_d$"
         " Use our own version of paste so it autoformats and positions the cursor correctly
-        call g:EasyClipPaste("p", 1, a:reg)
+        call g:EasyClipPaste("P", 1, a:reg, 0)
+    else
+        let isLastLine = (line(".") == line("$"))
 
-        let i = i + 1
-    endwhile
+        let cnt = a:count > 0 ? a:count : 1 
+        exe "normal! ". cnt . "\"_dd"
+
+        let i = 0
+        while i < cnt
+            " Use our own version of paste so it autoformats and positions the cursor correctly
+            call g:EasyClipPaste(isLastLine ? "p" : "P", 1, a:reg, 0)
+
+            let i = i + 1
+        endwhile
+    endif
 endfunction
 
 function! s:SubstituteToEndOfLine(reg, moveCursor)
@@ -82,7 +88,7 @@ function! s:SubstituteToEndOfLine(reg, moveCursor)
     exec "normal! \"_d$"
 
     " Use our own version of paste so it autoformats and positions the cursor correctly
-    call g:EasyClipPaste("p", 1, a:reg)
+    call g:EasyClipPaste("p", 1, a:reg, 0)
 
     if !a:moveCursor
         call setpos('.', startPos)
@@ -95,7 +101,6 @@ nnoremap <plug>G_SubstituteOverMotionMap :<c-u>call <sid>OnPreSubstitute(v:regis
 nnoremap <plug>SubstituteToEndOfLine :<c-u>call <sid>SubstituteToEndOfLine(v:register, 1)<cr>:call repeat#set("\<plug>SubstituteToEndOfLine")<cr>
 nnoremap <plug>G_SubstituteToEndOfLine :<c-u>call <sid>SubstituteToEndOfLine(v:register, 0)<cr>:call repeat#set("\<plug>G_SubstituteToEndOfLine")<cr>
 
-nnoremap <plug>NoNewlineSubstituteLine :<c-u>call <sid>SubstituteLineNoNewLine(v:register)<cr>:call repeat#set("\<plug>NoNewlineSubstituteLine")<cr>
 nnoremap <plug>SubstituteLine :<c-u>call <sid>SubstituteLine(v:register, v:count)<cr>:call repeat#set("\<plug>SubstituteLine")<cr>
 
 if !exists('g:EasyClipUseSubstituteDefaults') || g:EasyClipUseSubstituteDefaults
@@ -110,7 +115,5 @@ if !exists('g:EasyClipUseSubstituteDefaults') || g:EasyClipUseSubstituteDefaults
     endif
 
     nmap ss <plug>SubstituteLine
-    nmap sS <plug>NoNewlineSubstituteLine
-
     xmap s p
 endif
