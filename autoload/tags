@@ -1,0 +1,99 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+<plug>EasyClipPasteAfter	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipPasteAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'p', 1, "EasyClipPasteAfter")<cr>$/;"	m
+<plug>EasyClipPasteBefore	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipPasteBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 1, "EasyClipPasteBefore")<cr>$/;"	m
+<plug>EasyClipPasteUnformattedAfter	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipPasteUnformattedAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'p', 0, "EasyClipPasteUnformattedAfter")<cr>$/;"	m
+<plug>EasyClipPasteUnformattedBefore	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipPasteUnformattedBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>$/;"	m
+<plug>EasyClipRotateYanksBackward	./easyclip/yank.vim	/^nnoremap <plug>EasyClipRotateYanksBackward :<c-u>call easyclip#yank#ManuallyRotateYanks(-1)<cr>$/;"	m
+<plug>EasyClipRotateYanksForward	./easyclip/yank.vim	/^nnoremap <plug>EasyClipRotateYanksForward :<c-u>call easyclip#yank#ManuallyRotateYanks(1)<cr>$/;"	m
+<plug>EasyClipSwapPasteBackwards	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipSwapPasteBackwards :call easyclip#paste#SwapPaste(0)<cr>$/;"	m
+<plug>EasyClipSwapPasteForward	./easyclip/paste.vim	/^nnoremap <silent> <plug>EasyClipSwapPasteForward :call easyclip#paste#SwapPaste(1)<cr>$/;"	m
+<plug>G_EasyClipPasteAfter	./easyclip/paste.vim	/^nnoremap <silent> <plug>G_EasyClipPasteAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gp', 1, "G_EasyClipPasteAfter")<cr>$/;"	m
+<plug>G_EasyClipPasteBefore	./easyclip/paste.vim	/^nnoremap <silent> <plug>G_EasyClipPasteBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 1, "G_EasyClipPasteBefore")<cr>$/;"	m
+<plug>G_EasyClipPasteUnformattedAfter	./easyclip/paste.vim	/^nnoremap <silent> <plug>G_EasyClipPasteUnformattedAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gp', 0, "G_EasyClipPasteUnformattedAfter")<cr>$/;"	m
+<plug>G_EasyClipPasteUnformattedBefore	./easyclip/paste.vim	/^nnoremap <silent> <plug>G_EasyClipPasteUnformattedBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 0, "G_EasyClipPasteUnformattedBefore")<cr>$/;"	m
+<plug>G_SubstituteOverMotionMap	./easyclip/substitute.vim	/^nnoremap <plug>G_SubstituteOverMotionMap :<c-u>call easyclip#substitute#OnPreSubstitute(v:register, 0)<cr>:set opfunc=easyclip#substitute#SubstituteMotion<cr>g@$/;"	m
+<plug>G_SubstituteToEndOfLine	./easyclip/substitute.vim	/^nnoremap <plug>G_SubstituteToEndOfLine :<c-u>call easyclip#substitute#SubstituteToEndOfLine(v:register, 0)<cr>:call repeat#set("\\<plug>G_SubstituteToEndOfLine")<cr>$/;"	m
+<plug>MoveMotionEndOfLinePlug	./easyclip/move.vim	/^nnoremap <silent> <plug>MoveMotionEndOfLinePlug :<c-u>EasyClipBeforeYank<cr>y$"_d$:call repeat#set("\\<plug>MoveMotionEndOfLinePlug")<cr>$/;"	m
+<plug>MoveMotionLinePlug	./easyclip/move.vim	/^nnoremap <silent> <expr> <plug>MoveMotionLinePlug ':<c-u>EasyClipBeforeYank<cr>'. v:count .'yy'. v:count . '"_dd:call repeat#set("\\<plug>MoveMotionLinePlug")<cr>'$/;"	m
+<plug>MoveMotionPlug	./easyclip/move.vim	/^nnoremap <silent> <plug>MoveMotionPlug :call easyclip#move#PreMoveMotion()<cr>:set opfunc=easyclip#move#MoveMotion<cr>g@$/;"	m
+<plug>MoveMotionReplaceLinePlug	./easyclip/move.vim	/^nnoremap <silent> <plug>MoveMotionReplaceLinePlug :<c-u>EasyClipBeforeYank<cr>0y$"_d$:call repeat#set("\\<plug>MoveMotionReplaceLinePlug")<cr>$/;"	m
+<plug>SubstituteLine	./easyclip/substitute.vim	/^nnoremap <plug>SubstituteLine :<c-u>call easyclip#substitute#SubstituteLine(v:register, v:count)<cr>:call repeat#set("\\<plug>SubstituteLine")<cr>$/;"	m
+<plug>SubstituteOverMotionMap	./easyclip/substitute.vim	/^nnoremap <plug>SubstituteOverMotionMap :<c-u>call easyclip#substitute#OnPreSubstitute(v:register, 1)<cr>:set opfunc=easyclip#substitute#SubstituteMotion<cr>g@$/;"	m
+<plug>SubstituteToEndOfLine	./easyclip/substitute.vim	/^nnoremap <plug>SubstituteToEndOfLine :<c-u>call easyclip#substitute#SubstituteToEndOfLine(v:register, 1)<cr>:call repeat#set("\\<plug>SubstituteToEndOfLine")<cr>$/;"	m
+<plug>XEasyClipPasteUnformatted	./easyclip/paste.vim	/^nnoremap <silent> <plug>XEasyClipPasteUnformatted "_d:<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>$/;"	m
+<plug>YankLinePreserveCursorPosition	./easyclip/yank.vim	/^nnoremap <silent> <plug>YankLinePreserveCursorPosition :<c-u>call easyclip#yank#PreYankMotion()<cr>:call easyclip#yank#YankLine()<cr>$/;"	m
+<plug>YankPreserveCursorPosition	./easyclip/yank.vim	/^nnoremap <silent> <plug>YankPreserveCursorPosition :<c-u>call easyclip#yank#PreYankMotion()<cr>:set opfunc=easyclip#yank#YankMotion<cr>g@$/;"	m
+ClearYanks	./easyclip/yank.vim	/^command! -nargs=0 ClearYanks call easyclip#yank#ClearYanks()$/;"	c
+EasyClipBeforeYank	./easyclip/yank.vim	/^command! EasyClipBeforeYank :call easyclip#yank#OnBeforeYank()$/;"	c
+EndSwapPaste	./easyclip/paste.vim	/^function! s:EndSwapPaste()$/;"	f
+Yanks	./easyclip/yank.vim	/^command! -nargs=0 Yanks call easyclip#yank#ShowYanks()$/;"	c
+easyclip#GetDefaultReg	./easyclip.vim	/^function! easyclip#GetDefaultReg()$/;"	f
+easyclip#Init	./easyclip.vim	/^function! easyclip#Init()$/;"	f
+easyclip#Yank	./easyclip.vim	/^function! easyclip#Yank(str)$/;"	f
+easyclip#blackhole#AddDefaultBindings	./easyclip/blackhole.vim	/^function! easyclip#blackhole#AddDefaultBindings()$/;"	f
+easyclip#blackhole#AddSelectBindings	./easyclip/blackhole.vim	/^function! easyclip#blackhole#AddSelectBindings()$/;"	f
+easyclip#blackhole#Init	./easyclip/blackhole.vim	/^function! easyclip#blackhole#Init()$/;"	f
+easyclip#move#Init	./easyclip/move.vim	/^function! easyclip#move#Init()$/;"	f
+easyclip#move#MoveMotion	./easyclip/move.vim	/^function! easyclip#move#MoveMotion(type)$/;"	f
+easyclip#move#PreMoveMotion	./easyclip/move.vim	/^function! easyclip#move#PreMoveMotion( )$/;"	f
+easyclip#move#SetDefaultBindings	./easyclip/move.vim	/^function! easyclip#move#SetDefaultBindings()$/;"	f
+easyclip#paste#Init	./easyclip/paste.vim	/^function! easyclip#paste#Init()$/;"	f
+easyclip#paste#Paste	./easyclip/paste.vim	/^function! easyclip#paste#Paste(op, format, reg, inline)$/;"	f
+easyclip#paste#PasteText	./easyclip/paste.vim	/^function! easyclip#paste#PasteText(reg, count, op, format, plugName)$/;"	f
+easyclip#paste#SetDefaultMappings	./easyclip/paste.vim	/^function! easyclip#paste#SetDefaultMappings()$/;"	f
+easyclip#paste#SwapPaste	./easyclip/paste.vim	/^function! easyclip#paste#SwapPaste(forward)$/;"	f
+easyclip#paste#WasLastChangePaste	./easyclip/paste.vim	/^function! easyclip#paste#WasLastChangePaste()$/;"	f
+easyclip#substitute#Init	./easyclip/substitute.vim	/^function! easyclip#substitute#Init()$/;"	f
+easyclip#substitute#OnPreSubstitute	./easyclip/substitute.vim	/^function! easyclip#substitute#OnPreSubstitute(register, moveCursor)$/;"	f
+easyclip#substitute#SetDefaultBindings	./easyclip/substitute.vim	/^function! easyclip#substitute#SetDefaultBindings()$/;"	f
+easyclip#substitute#SubstituteLine	./easyclip/substitute.vim	/^function! easyclip#substitute#SubstituteLine(reg, count)$/;"	f
+easyclip#substitute#SubstituteMotion	./easyclip/substitute.vim	/^function! easyclip#substitute#SubstituteMotion(type, ...)$/;"	f
+easyclip#substitute#SubstituteToEndOfLine	./easyclip/substitute.vim	/^function! easyclip#substitute#SubstituteToEndOfLine(reg, moveCursor)$/;"	f
+easyclip#yank#ClearYanks	./easyclip/yank.vim	/^function! easyclip#yank#ClearYanks()$/;"	f
+easyclip#yank#EasyClipGetAllYanks	./easyclip/yank.vim	/^function! easyclip#yank#EasyClipGetAllYanks()$/;"	f
+easyclip#yank#EasyClipGetNumYanks	./easyclip/yank.vim	/^function! easyclip#yank#EasyClipGetNumYanks()$/;"	f
+easyclip#yank#GetYankstackHead	./easyclip/yank.vim	/^function! easyclip#yank#GetYankstackHead()$/;"	f
+easyclip#yank#Init	./easyclip/yank.vim	/^function! easyclip#yank#Init()$/;"	f
+easyclip#yank#InitSystemSync	./easyclip/yank.vim	/^function! easyclip#yank#InitSystemSync()$/;"	f
+easyclip#yank#ManuallyRotateYanks	./easyclip/yank.vim	/^function! easyclip#yank#ManuallyRotateYanks(offset)$/;"	f
+easyclip#yank#OnBeforeYank	./easyclip/yank.vim	/^function! easyclip#yank#OnBeforeYank()$/;"	f
+easyclip#yank#OnFocusGained	./easyclip/yank.vim	/^function! easyclip#yank#OnFocusGained()$/;"	f
+easyclip#yank#OnFocusLost	./easyclip/yank.vim	/^function! easyclip#yank#OnFocusLost()$/;"	f
+easyclip#yank#PreYankMotion	./easyclip/yank.vim	/^function! easyclip#yank#PreYankMotion()$/;"	f
+easyclip#yank#Rotate	./easyclip/yank.vim	/^function! easyclip#yank#Rotate(offset)$/;"	f
+easyclip#yank#SetDefaultMappings	./easyclip/yank.vim	/^function! easyclip#yank#SetDefaultMappings()$/;"	f
+easyclip#yank#SetYankStackHead	./easyclip/yank.vim	/^function! easyclip#yank#SetYankStackHead(entry)$/;"	f
+easyclip#yank#ShowYank	./easyclip/yank.vim	/^function! easyclip#yank#ShowYank(yank, index)$/;"	f
+easyclip#yank#ShowYanks	./easyclip/yank.vim	/^function! easyclip#yank#ShowYanks()$/;"	f
+easyclip#yank#YankLine	./easyclip/yank.vim	/^function! easyclip#yank#YankLine()$/;"	f
+easyclip#yank#YankMotion	./easyclip/yank.vim	/^function! easyclip#yank#YankMotion(type)$/;"	f
+g:EasyClipAutoFormat	./easyclip.vim	/^let g:EasyClipAutoFormat = get(g:, 'EasyClipAutoFormat', 0)$/;"	v
+g:EasyClipDoSystemSync	./easyclip.vim	/^let g:EasyClipDoSystemSync = get(g:, 'EasyClipDoSystemSync', 1)$/;"	v
+g:EasyClipEnableBlackHoleRedirect	./easyclip.vim	/^let g:EasyClipEnableBlackHoleRedirect = get(g:, 'EasyClipEnableBlackHoleRedirect', 1)$/;"	v
+g:EasyClipRemapCapitals	./easyclip.vim	/^let g:EasyClipRemapCapitals = get(g:, 'EasyClipRemapCapitals', 1)$/;"	v
+g:EasyClipUseCutDefaults	./easyclip.vim	/^let g:EasyClipUseCutDefaults = get(g:, 'EasyClipUseCutDefaults', 1)$/;"	v
+g:EasyClipUsePasteDefaults	./easyclip.vim	/^let g:EasyClipUsePasteDefaults = get(g:, 'EasyClipUsePasteDefaults', 1)$/;"	v
+g:EasyClipUsePasteToggleDefaults	./easyclip.vim	/^let g:EasyClipUsePasteToggleDefaults = get(g:, 'EasyClipUsePasteToggleDefaults', 1)$/;"	v
+g:EasyClipUseSubstituteDefaults	./easyclip.vim	/^let g:EasyClipUseSubstituteDefaults = get(g:, 'EasyClipUseSubstituteDefaults', 1)$/;"	v
+g:EasyClipUseYankDefaults	./easyclip.vim	/^let g:EasyClipUseYankDefaults = get(g:, 'EasyClipUseYankDefaults', 1)$/;"	v
+g:EasyClipYankHistorySize	./easyclip.vim	/^let g:EasyClipYankHistorySize = get(g:, 'EasyClipYankHistorySize', 50)$/;"	v
+g:lastSubChangedtick	./easyclip/substitute.vim	/^let g:lastSubChangedtick = -1$/;"	v
+s:activeRegister	./easyclip/move.vim	/^let s:activeRegister = easyclip#GetDefaultReg()$/;"	v
+s:activeRegister	./easyclip/substitute.vim	/^let s:activeRegister = easyclip#GetDefaultReg()$/;"	v
+s:activeRegister	./easyclip/yank.vim	/^let s:activeRegister = easyclip#GetDefaultReg()$/;"	v
+s:isFirstYank	./easyclip/yank.vim	/^let s:isFirstYank = 1$/;"	v
+s:isSwapping	./easyclip/paste.vim	/^let s:isSwapping = 0$/;"	v
+s:lastPasteChangedtick	./easyclip/paste.vim	/^let s:lastPasteChangedtick = -1$/;"	v
+s:lastPasteRegister	./easyclip/paste.vim	/^let s:lastPasteRegister =''$/;"	v
+s:lastSystemClipboard	./easyclip/yank.vim	/^let s:lastSystemClipboard = ''$/;"	v
+s:moveCursor	./easyclip/substitute.vim	/^let s:moveCursor = 0$/;"	v
+s:offsetSum	./easyclip/paste.vim	/^let s:offsetSum = 0$/;"	v
+s:pasteOverrideRegister	./easyclip/paste.vim	/^let s:pasteOverrideRegister = ''$/;"	v
+s:preYankPos	./easyclip/yank.vim	/^let s:preYankPos = []$/;"	v
+s:yankCount	./easyclip/yank.vim	/^let s:yankCount = 0$/;"	v
+s:yankstackTail	./easyclip/yank.vim	/^let s:yankstackTail = []$/;"	v
