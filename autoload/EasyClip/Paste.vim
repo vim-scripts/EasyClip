@@ -6,6 +6,7 @@ let s:lastPasteRegister =''
 let s:lastPasteChangedtick = -1
 let s:offsetSum = 0
 let s:isSwapping = 0
+let s:IgnoreAutoFormat = 0
 
 """""""""""""""""""""""
 " Plugs
@@ -14,28 +15,33 @@ let s:isSwapping = 0
 set pastetoggle=<plug>PasteToggle
 
 " Always toggle to 'paste mode' before pasting in insert mode
-exec "imap <plug>EasyClipInsertModePaste <plug>PasteToggle<C-r>" . easyclip#GetDefaultReg() . "<plug>PasteToggle"
+imap <expr> <plug>EasyClipInsertModePaste '<plug>PasteToggle<C-r>' . EasyClip#GetDefaultReg() . '<plug>PasteToggle'
 
-nnoremap <silent> <plug>EasyClipSwapPasteForward :call easyclip#paste#SwapPaste(1)<cr>
-nnoremap <silent> <plug>EasyClipSwapPasteBackwards :call easyclip#paste#SwapPaste(0)<cr>
+cnoremap <expr> <plug>EasyClipCommandModePaste '<c-r>' . EasyClip#GetDefaultReg()
 
-nnoremap <silent> <plug>EasyClipPasteAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'p', 1, "EasyClipPasteAfter")<cr>
-nnoremap <silent> <plug>EasyClipPasteBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 1, "EasyClipPasteBefore")<cr>
-xnoremap <silent> <expr> <plug>XEasyClipPaste '"_d:<c-u>call easyclip#paste#PasteText(''' . v:register . ''',' . v:count . ', "P", 1, "EasyClipPasteBefore")<cr>'
+nnoremap <silent> <plug>EasyClipSwapPasteForward :call EasyClip#Paste#SwapPaste(1)<cr>
+nnoremap <silent> <plug>EasyClipSwapPasteBackwards :call EasyClip#Paste#SwapPaste(0)<cr>
 
-nnoremap <silent> <plug>G_EasyClipPasteAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gp', 1, "G_EasyClipPasteAfter")<cr>
-nnoremap <silent> <plug>G_EasyClipPasteBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 1, "G_EasyClipPasteBefore")<cr>
-xnoremap <silent> <plug>XG_EasyClipPaste "_d:<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 1, "G_EasyClipPasteBefore")<cr>
+nnoremap <silent> <plug>EasyClipPasteAfter :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'p', 1, "EasyClipPasteAfter")<cr>
+nnoremap <silent> <plug>EasyClipPasteBefore :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'P', 1, "EasyClipPasteBefore")<cr>
 
-nnoremap <silent> <plug>EasyClipPasteUnformattedAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'p', 0, "EasyClipPasteUnformattedAfter")<cr>
-nnoremap <silent> <plug>EasyClipPasteUnformattedBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>
+xnoremap <silent> <expr> <plug>XEasyClipPaste ':<c-u>call EasyClip#Paste#PasteTextVisualMode(''' . v:register . ''',' . v:count . ')<cr>'
 
-nnoremap <silent> <plug>G_EasyClipPasteUnformattedAfter :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gp', 0, "G_EasyClipPasteUnformattedAfter")<cr>
-nnoremap <silent> <plug>G_EasyClipPasteUnformattedBefore :<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 0, "G_EasyClipPasteUnformattedBefore")<cr>
+nnoremap <silent> <plug>G_EasyClipPasteAfter :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gp', 1, "G_EasyClipPasteAfter")<cr>
+nnoremap <silent> <plug>G_EasyClipPasteBefore :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gP', 1, "G_EasyClipPasteBefore")<cr>
+xnoremap <silent> <plug>XG_EasyClipPaste "_d:<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gP', 1, "G_EasyClipPasteBefore")<cr>
 
-nnoremap <silent> <plug>XEasyClipPasteUnformatted "_d:<c-u>call easyclip#paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>
+nnoremap <silent> <plug>EasyClipPasteUnformattedAfter :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'p', 0, "EasyClipPasteUnformattedAfter")<cr>
+nnoremap <silent> <plug>EasyClipPasteUnformattedBefore :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>
 
-xnoremap <silent> <plug>XG_EasyClipPasteUnformatted "_d:<c-u>call easyclip#paste#PasteText(v:register, v:count, 'gP', 0, "G_EasyClipPasteUnformattedBefore")<cr>
+nnoremap <silent> <plug>G_EasyClipPasteUnformattedAfter :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gp', 0, "G_EasyClipPasteUnformattedAfter")<cr>
+nnoremap <silent> <plug>G_EasyClipPasteUnformattedBefore :<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gP', 0, "G_EasyClipPasteUnformattedBefore")<cr>
+
+nnoremap <silent> <plug>XEasyClipPasteUnformatted "_d:<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'P', 0, "EasyClipPasteUnformattedBefore")<cr>
+
+xnoremap <silent> <plug>XG_EasyClipPasteUnformatted "_d:<c-u>call EasyClip#Paste#PasteText(v:register, v:count, 'gP', 0, "G_EasyClipPasteUnformattedBefore")<cr>
+
+nnoremap <silent> <plug>EasyClipToggleFormattedPaste :call EasyClip#Paste#ToggleFormattedPaste()<cr>
 
 """""""""""""""""""""""
 " Functions
@@ -51,7 +57,7 @@ xnoremap <silent> <plug>XG_EasyClipPasteUnformatted "_d:<c-u>call easyclip#paste
 " format = 1 if we should autoformat
 " inline = 1 if we should paste multiline text inline.
 " That is, add the newline wherever the cursor is rather than above/below the current line
-function! easyclip#paste#Paste(op, format, reg, inline)
+function! EasyClip#Paste#Paste(op, format, reg, inline)
 
     let reg = empty(s:pasteOverrideRegister) ? a:reg : s:pasteOverrideRegister
 
@@ -72,10 +78,11 @@ function! easyclip#paste#Paste(op, format, reg, inline)
         " Do not save to jumplist when pasting inline
         exec "normal! ". (a:op ==# 'p' ? 'a' : 'i') . "\<c-r>". reg . "\<right>"
     else
+        let hasMoreThanOneLine = (text =~# "\n.*\n")
         " Save their old position to jumplist
         " Except for gp since the cursor pos shouldn't change
         " in that case
-        if isMultiLine && g:EasyClipAlwaysMoveCursorToEndOfPaste
+        if hasMoreThanOneLine && g:EasyClipAlwaysMoveCursorToEndOfPaste
             if a:op ==# 'P'
                 " just doing m` doesn't work in this case so do it one line above
                 exec "normal! km`j"
@@ -87,7 +94,7 @@ function! easyclip#paste#Paste(op, format, reg, inline)
         exec "normal! \"".reg.a:op
     endif
 
-    if (isMultiLine || isEmptyLine) && a:format && g:EasyClipAutoFormat && get(b:, 'EasyClipAutoFormat', 1)
+    if (isMultiLine || isEmptyLine) && a:format && g:EasyClipAutoFormat && get(b:, 'EasyClipAutoFormat', 1) && !s:IgnoreAutoFormat
         " Only auto-format if it's multiline or pasting into an empty line
 
         keepjumps normal! `]
@@ -115,11 +122,16 @@ function! easyclip#paste#Paste(op, format, reg, inline)
         exec "keepjumps normal! `["
 
     else
-        if !isMultiLine || g:EasyClipAlwaysMoveCursorToEndOfPaste
-            exec "keepjumps normal! `]"
-        else
-            exec "keepjumps normal! `["
+        if isMultiLine
+            if g:EasyClipAlwaysMoveCursorToEndOfPaste
+                exec "keepjumps normal! `]"
+            else
+                exec "keepjumps normal! `["
+            endif
+
             normal! ^
+        else
+            exec "keepjumps normal! `]"
         endif
     endif
 
@@ -139,27 +151,40 @@ function! s:EndSwapPaste()
     augroup END
 
     " Return yank positions to their original state before we started swapping
-    call easyclip#yank#Rotate(-s:offsetSum)
+    call EasyClip#Yank#Rotate(-s:offsetSum)
 endfunction
 
-function! easyclip#paste#WasLastChangePaste()
+function! EasyClip#Paste#WasLastChangePaste()
     return b:changedtick == s:lastPasteChangedtick || b:changedtick == g:lastSubChangedtick
 endfunction
 
-function! easyclip#paste#PasteText(reg, count, op, format, plugName)
+function! EasyClip#Paste#PasteTextVisualMode(reg, count)
+
+    normal! gv
+
+    " If we're pasting a single line yank in visual block mode then repeat paste for each line
+    if mode() ==# '' && getreg(a:reg) !~# '\n'
+        exec "normal! \"_c\<c-r>" . EasyClip#GetDefaultReg()
+    else
+        normal! "_d
+        call EasyClip#Paste#PasteText(a:reg, a:count, "P", 1, "EasyClipPasteBefore")
+    endif
+endfunction
+
+function! EasyClip#Paste#PasteText(reg, count, op, format, plugName)
     let reg = a:reg
 
     " This is necessary to get around a bug in vim where the active register persists to
     " the next command. Repro by doing "_d and then a command that uses v:register
     if reg == "_"
-        let reg = easyclip#GetDefaultReg()
+        let reg = EasyClip#GetDefaultReg()
     end
 
     let i = 0
     let cnt = a:count > 0 ? a:count : 1 
 
     while i < cnt
-        call easyclip#paste#Paste(a:op, a:format, reg, 0)
+        call EasyClip#Paste#Paste(a:op, a:format, reg, 0)
         let i = i + 1
     endwhile
 
@@ -172,40 +197,53 @@ function! easyclip#paste#PasteText(reg, count, op, format, plugName)
     endif
 endfunction
 
-function! easyclip#paste#SwapPaste(forward)
-    if easyclip#paste#WasLastChangePaste()
+function! EasyClip#Paste#ToggleFormattedPaste()
 
-        if s:isSwapping
-            " Stop checking to end the swap session
-            augroup SwapPasteMoveDetect
-                autocmd!
-            augroup END
-        else
-            let s:isSwapping = 1
-            let s:offsetSum = 0
-        endif
+    if !EasyClip#Paste#WasLastChangePaste()
+        echo 'Last action was not paste, toggle unformat command ignored'
+        return
+    endif
 
-        if s:lastPasteRegister == easyclip#GetDefaultReg()
-            let offset = (a:forward ? 1 : -1)
+    let s:IgnoreAutoFormat = 1
+    let s:pasteOverrideRegister = s:lastPasteRegister
+    exec "normal u."
+    let s:pasteOverrideRegister = ''
+    let s:IgnoreAutoFormat = 0
 
-            call easyclip#yank#Rotate(offset)
-            let s:offsetSum += offset
-        endif
+endfunction
 
-        let s:pasteOverrideRegister = easyclip#GetDefaultReg()
-        exec "normal u."
-        let s:pasteOverrideRegister = ''
+function! EasyClip#Paste#SwapPaste(forward)
+    if !EasyClip#Paste#WasLastChangePaste()
+        echo 'Last action was not paste, swap ignored'
+        return
+    endif
 
-        " Wait until the cursor moves and then reset the yank stack 
+    if s:isSwapping
+        " Stop checking to end the swap session
         augroup SwapPasteMoveDetect
             autocmd!
-            " Wait an extra CursorMoved event since there always seems to be one fired after this function ends
-            autocmd CursorMoved <buffer> autocmd SwapPasteMoveDetect CursorMoved <buffer> call <sid>EndSwapPaste()
         augroup END
     else
-        echo 'Last action was not paste, swap ignored'
-        "echo  b:changedtick . ' != '. s:lastPasteChangedtick
+        let s:isSwapping = 1
+        let s:offsetSum = 0
     endif
+
+    if s:lastPasteRegister == EasyClip#GetDefaultReg()
+        let offset = (a:forward ? 1 : -1)
+
+        call EasyClip#Yank#Rotate(offset)
+        let s:offsetSum += offset
+    endif
+
+    let s:pasteOverrideRegister = EasyClip#GetDefaultReg()
+    exec "normal u."
+    let s:pasteOverrideRegister = ''
+
+    augroup SwapPasteMoveDetect
+        autocmd!
+        " Wait an extra CursorMoved event since there always seems to be one fired after this function ends
+        autocmd CursorMoved <buffer> autocmd SwapPasteMoveDetect CursorMoved <buffer> call <sid>EndSwapPaste()
+    augroup END
 endfunction 
 
 " Default Paste Behaviour is:
@@ -217,7 +255,7 @@ endfunction
 " <c-s-p> - same as P but does not auto-format
 " g<c-p> - same as c-p but keeps cursor position
 " g<c-P> - same as c-p but keeps cursor position
-function! easyclip#paste#SetDefaultMappings()
+function! EasyClip#Paste#SetDefaultMappings()
 
     let bindings = 
     \ [
@@ -240,13 +278,13 @@ function! easyclip#paste#SetDefaultMappings()
     \ ]
 
     for binding in bindings
-        call call("easyclip#AddWeakMapping", binding)
+        call call("EasyClip#AddWeakMapping", binding)
     endfor
 endfunction
 
-function! easyclip#paste#Init()
+function! EasyClip#Paste#Init()
 
     if g:EasyClipUsePasteDefaults
-        call easyclip#paste#SetDefaultMappings()
+        call EasyClip#Paste#SetDefaultMappings()
     endif
 endfunction
